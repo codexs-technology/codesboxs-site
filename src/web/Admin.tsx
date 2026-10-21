@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { leadStatuses } from "../shared/validation";
 import { request } from "./forms";
+import { CommerceAdmin } from "./CommerceAdmin";
 
 type Row = Record<string, unknown>;
 type Session = { email: string; csrfToken: string };
@@ -277,6 +278,7 @@ export function Admin() {
               analytics or business performance claims. Check the Email delivery
               tab for actual notification states.
             </div>
+            <CommerceAdmin csrf={session.csrfToken} />
           </>
         ) : entity === "settings" ? (
           <form
@@ -295,7 +297,18 @@ export function Admin() {
             <label className="field">
               Setting
               <select name="key">
-                {["announcement", "contact_note", "footer_note"].map((key) => (
+                {[
+                  "announcement",
+                  "contact_note",
+                  "footer_note",
+                  "business_email",
+                  "business_email_verified",
+                  "business_phone",
+                  "business_phone_verified",
+                  "registered_address",
+                  "document_address",
+                  "address_verified",
+                ].map((key) => (
                   <option key={key}>{key}</option>
                 ))}
               </select>

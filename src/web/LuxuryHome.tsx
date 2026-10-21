@@ -8,6 +8,7 @@ import {
 } from "../shared/content";
 import { Art, Button, Section, ServiceCards } from "./components";
 import { Newsletter } from "./forms";
+import { Marketplace } from "./Commerce";
 import {
   SignatureEngagements,
   SignatureProcess,
@@ -94,23 +95,23 @@ export function LuxuryHome({ data }: { data: SiteData }) {
         <div className="hero-editorial">
           <p className="eyebrow">CODESBOXS / ENGINEERING STUDIO</p>
           <h1>
-            <span>WE DON’T JUST BUILD.</span>
-            <span>WE ENGINEER</span>
+            <span>Digital Ideas.</span>
+            <span>Extraordinary</span>
             <span>
-              WHAT’S <em>NEXT.</em>
+              <em>Results.</em>
             </span>
           </h1>
         </div>
         <div className="hero-baseline">
           <div>
             <p>
-              Custom software, intelligent automation, and exceptional digital
-              products for businesses ready to lead.
+              Web Development, AI Agents, Creative Branding, and Digital
+              Marketing — engineered to help businesses grow.
             </p>
             <div className="button-row">
               <Button href="/start-project">Start Your Project</Button>
-              <Button secondary href="/portfolio">
-                Explore our thinking
+              <Button secondary href="/services">
+                Explore Services
               </Button>
             </div>
           </div>
@@ -119,6 +120,17 @@ export function LuxuryHome({ data }: { data: SiteData }) {
           </a>
         </div>
       </section>
+      <div className="services-marquee" aria-label="Digital services">
+        <span>
+          WEB DEVELOPMENT • AI AGENTS • CREATIVE BRANDING • AUTOMATION • CLOUD
+          •{" "}
+        </span>
+        <span aria-hidden="true">
+          WEB DEVELOPMENT • AI AGENTS • CREATIVE BRANDING • AUTOMATION • CLOUD
+          •{" "}
+        </span>
+      </div>
+      <Marketplace data={data} />
       <Section
         id="perspective"
         className="brand-statement ivory"

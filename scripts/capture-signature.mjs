@@ -1,4 +1,3 @@
-/* global document */
 import { chromium } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 const directory = `artifacts/signature-v3/${process.env.SIGNATURE_REVIEW_PASS || 'pass-1'}`;

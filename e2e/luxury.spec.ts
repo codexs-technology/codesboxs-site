@@ -4,16 +4,17 @@ test("luxury compositions, capabilities and self-hosted fonts", async ({
   page,
 }) => {
   await page.goto("/");
-  await expect(page.locator("h1")).toContainText("WE DON’T JUST BUILD.");
-  await expect(page.locator("h1")).toContainText("WE ENGINEER");
-  await expect(page.locator("h1")).toContainText("WHAT’S NEXT.");
-  await expect(page.locator(".cinematic-hero")).toHaveCount(1);
-  await expect(page.locator(".ivory")).toHaveCount(4);
+  await expect(page.locator("h1")).toContainText(
+    "We Build Digital Experiences That",
+  );
+  await expect(page.locator("h1")).toContainText("Move Businesses Forward.");
+  await expect(page.locator(".flagship-hero")).toHaveCount(1);
+  await expect(page.locator(".ivory")).toHaveCount(3);
   await page.getByRole("button", { name: /Applied intelligence/ }).click();
   await expect(page.locator(".capability-copy")).toContainText("human review");
   expect(
     await page.evaluate(() => getComputedStyle(document.body).backgroundColor),
-  ).toBe("rgb(16, 16, 15)");
+  ).toBe("rgb(17, 17, 16)");
   await page.evaluate(() => document.fonts.ready);
   expect(
     await page.evaluate(() => document.fonts.check('16px "Space Grotesk"')),

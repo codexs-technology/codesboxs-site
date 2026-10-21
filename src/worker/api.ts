@@ -25,6 +25,7 @@ import {
 } from "./security";
 import { emailConfigured, notification, processOutbox } from "./email";
 import type { AppEnv, Session } from "./types";
+import { commerce, commerceAdmin } from "./commerce";
 
 export const api = new Hono<AppEnv>();
 api.use(
@@ -138,6 +139,8 @@ api.use("/admin/*", async (c, next) => {
   c.set("session", session);
   await next();
 });
+api.route("/admin/commerce", commerceAdmin);
+api.route("/commerce", commerce);
 api.get("/admin/session", (c) =>
   c.json({
     email: c.get("session").email,
@@ -455,7 +458,18 @@ api.get("/admin/settings", async (c) =>
 api.put("/admin/settings", async (c) => {
   const parsed = z
     .object({
-      key: z.enum(["announcement", "contact_note", "footer_note"]),
+      key: z.enum([
+        "announcement",
+        "contact_note",
+        "footer_note",
+        "business_email",
+        "business_email_verified",
+        "business_phone",
+        "business_phone_verified",
+        "registered_address",
+        "document_address",
+        "address_verified",
+      ]),
       value: z.string().trim().max(500),
     })
     .safeParse(await c.req.json());

@@ -3,6 +3,8 @@ import type { SiteData } from "../shared/content";
 import "./styles.css";
 import "./luxury.css";
 import "./signature.css";
+import "./commerce.css";
+import "./flagship.css";
 
 const node = document.getElementById("site-data");
 const root = document.getElementById("root");

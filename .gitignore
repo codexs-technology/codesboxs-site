@@ -15,3 +15,6 @@ reports/
 *.log
 .test-bootstrap-secret
 .DS_Store
+*.exit
+*.done
+private-onboarding/

@@ -425,6 +425,40 @@ export const services: Service[] = [
       "No. Search visibility and business results depend on competition, product-market fit and many external factors. We agree measurable work and report evidence transparently.",
     image: "engineering",
   },
+  {
+    slug: "branding-design",
+    title: "Branding & Graphic Design",
+    eyebrow: "An identity with intention",
+    summary:
+      "Distinctive visual identities, logos and campaign assets that give your business a coherent presence.",
+    description:
+      "We translate your positioning into a practical visual language. Logo exploration, typography, color and layout rules come together in a usable identity system, with digital and marketing assets scoped around the channels you actually use.",
+    capabilities: [
+      "Logo design and identity systems",
+      "Brand guidelines and digital templates",
+      "Banner and campaign design",
+      "Social media creative",
+    ],
+    benefits: [
+      "A consistent presence across touchpoints",
+      "Reusable assets for your team",
+      "Design decisions connected to positioning",
+    ],
+    deliverables: [
+      "Agreed logo and identity assets",
+      "Typography, color and usage guidelines",
+      "Scoped banner, social or campaign files",
+    ],
+    technologies: [
+      "Vector design",
+      "Design systems",
+      "Digital asset production",
+    ],
+    question: "Are revisions and ownership included?",
+    answer:
+      "Revision rounds, file formats, font and asset licensing, and ownership transfer are explicitly agreed in your proposal before design begins.",
+    image: "engineering",
+  },
 ];
 
 export const stages = [

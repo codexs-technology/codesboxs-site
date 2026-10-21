@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { business, services, type SiteData } from "../shared/content";
 import { CommerceTools } from "./Commerce";
+import { ServiceVisual } from "./ProductVisual";
 
 export const icons = [
   Code2,
@@ -113,6 +114,19 @@ export function Art({
 }
 export function Header({ announcement }: { announcement?: string }) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 24);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    document
+      .querySelectorAll<HTMLAnchorElement>(".desktop-nav a")
+      .forEach((link) => {
+        if (link.pathname === window.location.pathname)
+          link.setAttribute("aria-current", "page");
+      });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
   const drawer = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -151,9 +165,8 @@ export function Header({ announcement }: { announcement?: string }) {
   }, [open]);
   const links = [
     ["Home", "/"],
-    ["Pricing", "/pricing"],
+    ["Solutions", "/ai-solutions"],
     ["Portfolio", "/portfolio"],
-    ["How It Works", "/how-it-works"],
     ["About", "/about"],
     ["Contact", "/contact"],
   ];
@@ -177,7 +190,7 @@ export function Header({ announcement }: { announcement?: string }) {
           </a>
         </div>
       )}
-      <header className="header">
+      <header className={`header ${scrolled ? "header-scrolled" : ""}`}>
         <a href="/" className="brand" aria-label="CodesBoxs home">
           <span className="brand-mark">
             <Code2 size={22} />
@@ -205,7 +218,7 @@ export function Header({ announcement }: { announcement?: string }) {
               </div>
               <div className="mega-links">
                 {services.map((s, i) => {
-                  const Icon = icons[i];
+                  const Icon = icons[i] || Code2;
                   return (
                     <a href={`/services/${s.slug}`} key={s.slug}>
                       <Icon size={17} />
@@ -216,12 +229,12 @@ export function Header({ announcement }: { announcement?: string }) {
               </div>
             </div>
           </details>
-          {links.slice(1, 5).map(([label, href]) => (
+          {links.slice(1, 4).map(([label, href]) => (
             <a key={href} href={href}>
               {label}
             </a>
           ))}
-          <details className="nav-dropdown">
+          <details className="nav-dropdown nav-resources">
             <summary>
               Resources <ChevronDown size={13} />
             </summary>
@@ -237,7 +250,7 @@ export function Header({ announcement }: { announcement?: string }) {
         </nav>
         <CommerceTools />
         <a href="/start-project" className="header-cta">
-          Start a Project <ArrowUpRight size={15} />
+          Let’s Talk <ArrowUpRight size={15} />
         </a>
         <button
           ref={trigger}
@@ -405,6 +418,18 @@ export function ServiceCards({
   limit?: number;
   managed?: SiteData["serviceContent"];
 }) {
+  const priority = [
+    "web-development",
+    "ai-agents-automation",
+    "custom-software",
+    "mobile-app-development",
+    "saas-development",
+    "ecommerce-development",
+    "ui-ux-design",
+    "branding-design",
+    "digital-marketing",
+    "cloud-devops",
+  ];
   const entries = [
     ...services.map((service) => ({
       ...service,
@@ -413,7 +438,11 @@ export function ServiceCards({
     ...managed.filter(
       (entry) => !services.some((service) => service.slug === entry.slug),
     ),
-  ];
+  ].sort((a, b) => {
+    const rank = (slug: string) =>
+      priority.includes(slug) ? priority.indexOf(slug) : priority.length;
+    return rank(a.slug) - rank(b.slug);
+  });
   return (
     <div className="service-grid editorial-services">
       {entries.slice(0, limit).map((s, i) => {
@@ -428,14 +457,7 @@ export function ServiceCards({
             </span>
             <h3>{s.title}</h3>
             <p>{s.summary}</p>
-            <img
-              className="service-preview"
-              src={`/images/${services[i % services.length].image}.svg`}
-              width={1200}
-              height={1000}
-              alt=""
-              loading="lazy"
-            />
+            <ServiceVisual index={i} />
             <span className="text-link">
               Explore capability <ArrowUpRight size={16} />
             </span>

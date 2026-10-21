@@ -64,9 +64,12 @@ describe("content inventory", () => {
       }).success,
     ).toBe(false);
   });
-  it("has all 13 unique service pages", () => {
-    expect(services).toHaveLength(13);
-    expect(new Set(services.map((s) => s.slug)).size).toBe(13);
+  it("preserves all existing services and adds branding with unique detail pages", () => {
+    expect(services).toHaveLength(14);
+    expect(new Set(services.map((s) => s.slug)).size).toBe(14);
+    expect(
+      services.find((s) => s.slug === "branding-design")?.deliverables.length,
+    ).toBeGreaterThan(0);
   });
   it("has all main route metadata", () => {
     for (const path of [

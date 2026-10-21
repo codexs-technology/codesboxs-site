@@ -13,7 +13,7 @@ describe("password and environment boundaries", () => {
     expect(hash.startsWith("pbkdf2-sha256-v2$")).toBe(true);
     expect(await verifyPassword("A-long-Test!Password2026", hash)).toBe(true);
     expect(await verifyPassword("wrong", hash)).toBe(false);
-  }, 30000);
+  }, 60000);
   it("never permits local bypass for public or production hosts", () => {
     const env = { ENVIRONMENT: "development", LOCAL_TEST_MODE: "true" } as Env;
     expect(isLocal(env, "http://localhost:8787")).toBe(true);

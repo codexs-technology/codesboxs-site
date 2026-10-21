@@ -29,7 +29,7 @@ import {
 } from "./components";
 import { ContactForm, ProjectForm, request } from "./forms";
 import { applicationSchema } from "../shared/validation";
-import { LuxuryHome } from "./LuxuryHome";
+import { FlagshipHome } from "./FlagshipHome";
 import { SignatureProcess, SignatureWorkflow } from "./SignatureSystems";
 import { commercePages } from "../shared/commerce";
 import { CommercePage, Marketplace } from "./Commerce";
@@ -937,7 +937,7 @@ function Unsubscribe() {
 function PublicPage({ data }: { data: SiteData }) {
   const path = data.path;
   if (commercePages[path]) return <CommercePage data={data} />;
-  if (path === "/") return <LuxuryHome data={data} />;
+  if (path === "/") return <FlagshipHome data={data} />;
   if (path.startsWith("/services/"))
     return <ServicePage slug={path.split("/")[2]} data={data} />;
   if (path.startsWith("/blog/") || path.startsWith("/portfolio/")) {
@@ -957,7 +957,7 @@ function PublicPage({ data }: { data: SiteData }) {
     <>
       <Hero
         title={
-          path === "/contact" ? "LET’S BUILD\nSOMETHING\nEXTRAORDINARY." : title
+          path === "/contact" ? "Let’s build something extraordinary." : title
         }
         description={description}
         eyebrow={path.slice(1).replaceAll("-", " ").toUpperCase()}

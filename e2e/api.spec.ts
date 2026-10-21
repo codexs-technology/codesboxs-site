@@ -48,6 +48,126 @@ test("real local D1 persistence, authentication, CSRF, content and logout", asyn
   expect(login.headers()["set-cookie"]).toContain("SameSite=Strict");
   const session = await login.json();
   const authHeaders = { ...headers, "X-CSRF-Token": session.csrfToken };
+  // Synthetic local-only fixture, never seeded or represented as an approved business price.
+  const createService = await request.post("/api/admin/services", {
+    headers: authHeaders,
+    data: {
+      title: "Local commerce fixture",
+      slug: `commerce-${suffix}`,
+      summary:
+        "Synthetic local test service, not a business-approved offering.",
+      body: "Synthetic local test content for checkout persistence verification only.",
+      status: "published",
+    },
+  });
+  expect(createService.status(), await createService.text()).toBe(201);
+  const serviceFixture = await createService.json();
+  const categoryId = `commerce-${suffix}`;
+  expect(
+    (
+      await request.put("/api/admin/commerce/categories", {
+        headers: authHeaders,
+        data: {
+          id: categoryId,
+          slug: categoryId,
+          name: "Local test category",
+          published: true,
+          position: 0,
+          parent_id: null,
+        },
+      })
+    ).status(),
+  ).toBe(200);
+  const fixturePackage = {
+    service_id: serviceFixture.id,
+    category_id: categoryId,
+    name: "Basic",
+    description: "Synthetic package for isolated local checkout testing only.",
+    deliverables: "A synthetic test deliverable",
+    timeline: "Local test only",
+    revisions: "No real revisions",
+    exclusions: "No real service delivery",
+    pricing_type: "fixed",
+    amount_minor: 12500,
+    approved: true,
+    archived: false,
+  };
+  expect(
+    (
+      await request.put("/api/admin/commerce/packages/" + categoryId, {
+        headers: authHeaders,
+        data: fixturePackage,
+      })
+    ).status(),
+  ).toBe(200);
+  expect(
+    (
+      await request.put("/api/admin/commerce/packages/" + categoryId, {
+        headers,
+        data: fixturePackage,
+      })
+    ).status(),
+  ).toBe(403);
+  const orderHeaders = {
+    ...headers,
+    "Idempotency-Key": `checkout-${suffix}-${suffix}`,
+    "X-Order-Token": `access-${suffix}-${suffix}-${suffix}`,
+  };
+  const checkoutData = {
+    name: "Local Test Buyer",
+    email: "local-buyer@example.com",
+    country: "PK",
+    requirements: "Synthetic local project requirements",
+    display_currency: "USD",
+    terms: true,
+    items: [{ package_id: categoryId, quantity: 2 }],
+  };
+  const createdOrder = await request.post("/api/commerce/checkout", {
+    headers: orderHeaders,
+    data: checkoutData,
+  });
+  expect(createdOrder.status(), await createdOrder.text()).toBe(201);
+  const order = await createdOrder.json();
+  expect(order.amount_minor).toBe(25000);
+  const repeated = await request.post("/api/commerce/checkout", {
+    headers: orderHeaders,
+    data: checkoutData,
+  });
+  expect((await repeated.json()).id).toBe(order.id);
+  expect(
+    (
+      await request.post("/api/commerce/checkout", {
+        headers: orderHeaders,
+        data: { ...checkoutData, name: "Changed Buyer" },
+      })
+    ).status(),
+  ).toBe(409);
+  expect((await request.get("/api/commerce/orders/" + order.id)).status()).toBe(
+    404,
+  );
+  for (let i = 0; i < 2; i++)
+    expect(
+      (
+        await request.post(
+          "/api/commerce/orders/" + order.id + "/mock-payment",
+          { headers: orderHeaders, data: {} },
+        )
+      ).status(),
+    ).toBe(200);
+  const verified = await request.get("/api/commerce/orders/" + order.id, {
+    headers: orderHeaders,
+  });
+  expect((await verified.json()).status).toBe("test_paid");
+  const readiness = await request.get("/api/admin/commerce/readiness");
+  expect((await readiness.json()).ready).toBe(false);
+  expect(
+    (
+      await request.put("/api/admin/commerce/packages/" + categoryId, {
+        headers: authHeaders,
+        data: { ...fixturePackage, archived: true },
+      })
+    ).status(),
+  ).toBe(200);
   const subscriptionEmail = `unsubscribe-${suffix}@example.com`;
   const subscribe = () =>
     request.post("/api/newsletter/subscribe", {

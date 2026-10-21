@@ -31,6 +31,8 @@ import { ContactForm, ProjectForm, request } from "./forms";
 import { applicationSchema } from "../shared/validation";
 import { LuxuryHome } from "./LuxuryHome";
 import { SignatureProcess, SignatureWorkflow } from "./SignatureSystems";
+import { commercePages } from "../shared/commerce";
+import { CommercePage, Marketplace } from "./Commerce";
 
 class ErrorBoundary extends Component<
   { children: ReactNode },
@@ -431,6 +433,7 @@ function ServicePage({ slug, data }: { slug: string; data: SiteData }) {
               )}
           </article>
         </Section>
+        <Marketplace data={data} serviceSlug={slug} />
         <ConsultationCTA />
       </>
     ) : (
@@ -451,6 +454,7 @@ function ServicePage({ slug, data }: { slug: string; data: SiteData }) {
         eyebrow={service.eyebrow}
         image={service.image}
       />
+      <Marketplace data={data} serviceSlug={slug} />
       <Section eyebrow="THE OPPORTUNITY" title={service.eyebrow}>
         <p className="large-copy">{managed?.body || service.description}</p>
       </Section>
@@ -810,11 +814,15 @@ function Legal({ path }: { path: string }) {
       ? [
           [
             "Information you provide",
-            "Inquiry forms collect your name, email, company, optional phone, service interests, budget, timeline and project description. Newsletter registration records an email address and consent. Published job applications collect the fields displayed in that application form.",
+            "Inquiry forms collect your name, email, company, optional phone, service interests, budget, timeline and project description. Newsletter registration records an email address and consent. Guest test checkout stores name, email, billing country, project requirements, order items, totals and test payment events in D1. Card numbers and CVV are never collected. Published job applications collect the displayed fields.",
           ],
           [
             "Purpose and processors",
             "Information is used to review inquiries, manage communication and administer applications or subscriptions. The planned infrastructure includes Cloudflare for hosting and database processing and a configured email provider for notifications. The owner must verify the final processors, contractual terms and applicable transfer safeguards.",
+          ],
+          [
+            "Storage and protection",
+            "Cart and display-currency preferences use local storage; private order access tokens use session storage. Admin login uses an HttpOnly session cookie. APIs use validation, prepared SQL, origin checks and access tokens. No optional analytics or advertising scripts are enabled. Cloudflare processes hosting, D1 and Turnstile data; configured email notifications use Resend. The currency provider receives server-side rate requests, not checkout customer details. RapidGateway receives no payment data while disabled.",
           ],
           [
             "Retention and rights",
@@ -928,6 +936,7 @@ function Unsubscribe() {
 }
 function PublicPage({ data }: { data: SiteData }) {
   const path = data.path;
+  if (commercePages[path]) return <CommercePage data={data} />;
   if (path === "/") return <LuxuryHome data={data} />;
   if (path.startsWith("/services/"))
     return <ServicePage slug={path.split("/")[2]} data={data} />;
@@ -1249,7 +1258,7 @@ export function App({ data }: { data: SiteData }) {
       >
         <PublicPage data={data} />
       </main>
-      <Footer note={data.settings.footer_note} />
+      <Footer note={data.settings.footer_note} settings={data.settings} />
     </ErrorBoundary>
   );
 }

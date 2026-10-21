@@ -13,6 +13,7 @@ import { api } from "./api";
 import { isLocal, randomToken } from "./security";
 import { processOutbox } from "./email";
 import type { AppEnv, Env } from "./types";
+import { commercePages } from "../shared/commerce";
 
 const app = new Hono<AppEnv>();
 const escape = (value: string) =>
@@ -97,6 +98,8 @@ app.get("/sitemap.xml", async (c) => {
 });
 app.get("*", async (c) => {
   const path = new URL(c.req.url).pathname;
+  if (path === "/admin/login" || path === "/admin/dashboard")
+    return c.redirect("/admin", 302);
   if (
     path.startsWith("/assets/") ||
     path.startsWith("/images/") ||
@@ -159,6 +162,7 @@ app.get("*", async (c) => {
   }
   const found = !!(
     pages[path] ||
+    commercePages[path] ||
     service ||
     managedService ||
     post ||
@@ -170,7 +174,9 @@ app.get("*", async (c) => {
     service?.title ||
     post?.title ||
     project?.title ||
-    (path === "/admin" ? "Administrator" : pages[found ? path : "/404"][0]);
+    (path === "/admin"
+      ? "Administrator"
+      : (commercePages[path] || pages[found ? path : "/404"])[0]);
   const description =
     managedService?.summary ||
     service?.summary ||
@@ -178,7 +184,7 @@ app.get("*", async (c) => {
     project?.summary ||
     (path === "/admin"
       ? "Authorized administration only."
-      : pages[found ? path : "/404"][1]);
+      : (commercePages[path] || pages[found ? path : "/404"])[1]);
   const canonical = c.env.PUBLIC_SITE_URL.replace(/\/$/, "") + path;
   const schema: Record<string, unknown> = post
     ? {

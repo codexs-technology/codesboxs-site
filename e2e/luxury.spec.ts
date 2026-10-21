@@ -4,9 +4,9 @@ test("luxury compositions, capabilities and self-hosted fonts", async ({
   page,
 }) => {
   await page.goto("/");
-  await expect(page.locator("h1")).toContainText("WE DON’T JUST BUILD.");
-  await expect(page.locator("h1")).toContainText("WE ENGINEER");
-  await expect(page.locator("h1")).toContainText("WHAT’S NEXT.");
+  await expect(page.locator("h1")).toContainText("Digital Ideas.");
+  await expect(page.locator("h1")).toContainText("Extraordinary");
+  await expect(page.locator("h1")).toContainText("Results.");
   await expect(page.locator(".cinematic-hero")).toHaveCount(1);
   await expect(page.locator(".ivory")).toHaveCount(4);
   await page.getByRole("button", { name: /Applied intelligence/ }).click();

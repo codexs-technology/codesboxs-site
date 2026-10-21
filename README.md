@@ -1,5 +1,9 @@
 # CodesBoxs SMC Pvt Ltd website
 
+## Commerce implementation checkpoint — 2026-10-21
+
+Added additive D1 commerce schema, package/category administration, eight display currencies, cart/guest test checkout and local-only mock payments. **Not production complete or merchant ready.** No approved prices or verified company phone/address were supplied. See `docs/COMMERCE-OPERATIONS.md`, `docs/COMMERCE-VALIDATION.md` and `docs/RAPIDGATEWAY-COMPLIANCE.md` for current instructions, verified evidence and remaining work. Earlier validation counts below describe older repository checkpoints.
+
 **Status: implementation in progress; NO-GO for production until the open gates in PROJECT_PROGRESS.md and REQUIREMENTS.md are verified.**
 
 React/TypeScript public website with server-rendered content, Hono on Cloudflare Workers, D1 persistence, and a responsive administrator interface. No VPS or traditional Node server is required. Node is used for development/build tooling only.

@@ -11,6 +11,7 @@ export type Env = {
   EMAIL_FROM?: string;
   NOTIFICATION_EMAIL?: string;
   SEND_CONFIRMATIONS?: string;
+  PAYMENT_PROVIDER?: string;
 };
 export type Session = {
   admin_id: string;

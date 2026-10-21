@@ -12,6 +12,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import { business, services, type SiteData } from "../shared/content";
+import { CommerceTools } from "./Commerce";
 
 export const icons = [
   Code2,
@@ -150,9 +151,9 @@ export function Header({ announcement }: { announcement?: string }) {
   }, [open]);
   const links = [
     ["Home", "/"],
-    ["AI Solutions", "/ai-solutions"],
+    ["Pricing", "/pricing"],
     ["Portfolio", "/portfolio"],
-    ["Industries", "/industries"],
+    ["How It Works", "/how-it-works"],
     ["About", "/about"],
     ["Contact", "/contact"],
   ];
@@ -234,8 +235,9 @@ export function Header({ announcement }: { announcement?: string }) {
           </details>
           <a href="/contact">Contact</a>
         </nav>
-        <a href="/contact" className="header-cta">
-          Let’s talk <ArrowUpRight size={15} />
+        <CommerceTools />
+        <a href="/start-project" className="header-cta">
+          Start a Project <ArrowUpRight size={15} />
         </a>
         <button
           ref={trigger}
@@ -294,7 +296,13 @@ export function Header({ announcement }: { announcement?: string }) {
     </>
   );
 }
-export function Footer({ note }: { note?: string }) {
+export function Footer({
+  note,
+  settings = {},
+}: {
+  note?: string;
+  settings?: Record<string, string>;
+}) {
   const groups = {
     Company: [
       ["About", "/about"],
@@ -316,6 +324,12 @@ export function Footer({ note }: { note?: string }) {
       ["Privacy Draft", "/privacy-policy"],
       ["Terms Draft", "/terms-of-service"],
       ["Cookie Draft", "/cookie-policy"],
+      ["Refund Policy", "/refund-policy"],
+      ["Terms & Conditions", "/terms-and-conditions"],
+      ["Digital Delivery", "/shipping-policy"],
+      ["Payment Policy", "/payment-policy"],
+      ["How It Works", "/how-it-works"],
+      ["Pricing", "/pricing"],
     ],
   };
   return (
@@ -338,6 +352,24 @@ export function Footer({ note }: { note?: string }) {
             Intelligent foundations.
           </p>
           <a href={`mailto:${business.email}`}>{business.email}</a>
+          <p>{business.name}</p>
+          <p>
+            {settings.business_email_verified === "true"
+              ? settings.business_email
+              : "Business email verification pending"}
+          </p>
+          <p>
+            {settings.business_phone_verified === "true"
+              ? settings.business_phone
+              : "Verified phone pending"}
+          </p>
+          <p>
+            {settings.address_verified === "true" &&
+            settings.registered_address &&
+            settings.registered_address === settings.document_address
+              ? settings.registered_address
+              : "Registered address verification pending — merchant launch blocked"}
+          </p>
           <a className="footer-booking" href={business.booking}>
             Book a Free Consultation <ArrowUpRight size={14} />
           </a>
